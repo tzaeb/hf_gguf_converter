@@ -1,0 +1,42 @@
+parameters:
+- name: agentPool
+  type: string
+  default: 'MySelfHostedPool'
+- name: modelId
+  type: string
+  default: 'microsoft/phi-2'
+- name: modelName
+  type: string
+  default: 'phi-2'
+- name: downloadDir
+  type: string
+  default: '.\models\${{ parameters.modelName }}'
+- name: llamaCppDir
+  type: string
+  default: '.\llama.cpp'
+- name: quantizeType
+  type: string
+  default: 'Q4_K_M'
+
+jobs:
+- job: ConvertModel
+  pool:
+    name: ${{ parameters.agentPool }}
+  steps:
+  - checkout: self
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+  - script: |
+      pwsh ./build_llama_cpp.ps1 `
+        -LlamaCppDir "${{ parameters.llamaCppDir }}"
+    displayName: 'Build llama.cpp'
+  - script: |
+      pwsh ./convert_model.ps1 `
+        -ModelId ${{ parameters.modelId }} `
+        -ModelName ${{ parameters.modelName }} `
+        -DownloadDir "${{ parameters.downloadDir }}" `
+        -LlamaCppDir "${{ parameters.llamaCppDir }}" `
+        -QuantizeType ${{ parameters.quantizeType }}
+    displayName: 'Convert & Quantize Model'
