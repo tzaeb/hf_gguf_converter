@@ -9,10 +9,10 @@ param(
 )
 
 Write-Host "=== Build llama.cpp ==="
-pwsh .\build_llama_cpp.ps1 -LlamaCppDir $LlamaCppDir
+.\build_llama_cpp.ps1 -LlamaCppDir $LlamaCppDir
 
 Write-Host "`n=== Convert & Quantize Model ==="
-pwsh .\convert_model.ps1 `
+.\convert_model.ps1 `
     -ModelId      $ModelId `
     -ModelName    $ModelName `
     -DownloadDir  $DownloadDir `
