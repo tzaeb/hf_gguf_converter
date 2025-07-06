@@ -38,22 +38,22 @@ jobs:
     name: ${{ parameters.agentPool }}
   steps:
   - checkout: self
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: '3.11'
-      addToPath: true
   - script: |
+      python --version
       python -m pip install --upgrade pip
       echo "Installing PyTorch (CPU version)..."
-      pip install torch --index-url https://download.pytorch.org/whl/cpu
+      python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
       echo "Installing other dependencies..."
-      pip install numpy "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+      python -m pip install numpy "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
       echo "Attempting to install sentencepiece..."
-      pip install sentencepiece || echo "SentencePiece installation failed - some models may not convert"
+      python -m pip install sentencepiece || echo "SentencePiece installation failed - some models may not convert"
       echo "Verifying installations..."
-      python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
-      python -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
-      python -c "try: import sentencepiece; print('SentencePiece: Available'); except ImportError: print('SentencePiece: Not available')"
+      python -c "import torch; print('PyTorch version:', torch.__version__)"
+      python -c "import transformers; print('Transformers version:', transformers.__version__)"
+      python -c "try:^
+ import sentencepiece; print('SentencePiece: Available')^
+except ImportError:^
+ print('SentencePiece: Not available')"
     displayName: 'Install Python Dependencies'
   - ${{ if eq(parameters.buildLlamaCpp, true) }}:
     - script: |
