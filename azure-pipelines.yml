@@ -50,10 +50,7 @@ jobs:
       echo "Verifying installations..."
       python -c "import torch; print('PyTorch version:', torch.__version__)"
       python -c "import transformers; print('Transformers version:', transformers.__version__)"
-      python -c "try:^
- import sentencepiece; print('SentencePiece: Available')^
-except ImportError:^
- print('SentencePiece: Not available')"
+      python -c "try: import sentencepiece; print('SentencePiece: Available'); except ImportError: print('SentencePiece: Not available')"
     displayName: 'Install Python Dependencies'
   - ${{ if eq(parameters.buildLlamaCpp, true) }}:
     - script: |
