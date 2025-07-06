@@ -41,7 +41,9 @@ huggingface-cli download $ModelId --local-dir $DownloadDir --local-dir-use-symli
 
 # --- 2. Install llama.cpp Python Dependencies ---
 Write-Host "Installing Python requirements for llama.cpp..."
-pip install -r "$LlamaCppDir\requirements.txt"
+# Install the specific requirements for HF to GGUF conversion (avoiding sentencepiece compilation issues)
+pip install --extra-index-url https://download.pytorch.org/whl/cpu torch~=2.2.1
+pip install numpy~=1.26.4 "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
 
 # --- 3. Convert to GGUF (F16) ---
 Write-Host "Converting model to GGUF (F16)..."

@@ -8,6 +8,9 @@ parameters:
 - name: llamaCppDir
   type: string
   default: '.\llama.cpp'
+- name: buildLlamaCpp
+  type: boolean
+  default: true
 - name: quantizeType
   type: string
   default: 'Q4_K_M'
@@ -40,8 +43,14 @@ jobs:
       versionSpec: '3.x'
       addToPath: true
   - script: |
-      powershell -File ./build_llama_cpp.ps1 -LlamaCppDir "${{ parameters.llamaCppDir }}"
-    displayName: 'Build llama.cpp'
+      python -m pip install --upgrade pip
+      pip install --extra-index-url https://download.pytorch.org/whl/cpu torch~=2.2.1
+      pip install numpy~=1.26.4 "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+    displayName: 'Install Python Dependencies'
+  - ${{ if eq(parameters.buildLlamaCpp, true) }}:
+    - script: |
+        powershell -File ./build_llama_cpp.ps1 -LlamaCppDir "${{ parameters.llamaCppDir }}"
+      displayName: 'Build llama.cpp'
   - script: |
       powershell -File ./convert_model.ps1 -ModelId "${{ parameters.modelId }}" -LlamaCppDir "${{ parameters.llamaCppDir }}" -QuantizeType "${{ parameters.quantizeType }}"
     displayName: 'Convert & Quantize Model'
