@@ -13,8 +13,6 @@ A small toolset to download, convert, and quantize Hugging Face models into GGUF
   - Install the “Desktop development with C++” workload
   - Ensure `cl.exe` and other MSVC tools are in your PATH (run from a Developer Command Prompt if needed)
 
-- **Git** (to clone llama.cpp if not present)
-
 - **Hugging Face CLI**
   - Install via PowerShell/terminal:
     ```powershell
@@ -32,13 +30,18 @@ A small toolset to download, convert, and quantize Hugging Face models into GGUF
    git clone <repo-url>
    cd hf_gguf_converter
    ```
+2. Clone llama.cpp repo:
+   ```powershell
+    git clone https://github.com/ggerganov/llama.cpp llama.cpp
+   ```
+
 2. Build llama.cpp:
    ```powershell
-   pwsh .\build_llama_cpp.ps1 -LlamaCppDir ".\llama.cpp"
+   .\build_llama_cpp.ps1 -LlamaCppDir ".\llama.cpp"
    ```
 3. Convert & quantize your model (ensure you’re logged in via HF CLI):
    ```powershell
-   pwsh .\convert_model.ps1 `
+   .\convert_model.ps1 `
      -ModelId "microsoft/phi-2" `
      -ModelName "phi-2" `
      -DownloadDir ".\models\phi-2" `

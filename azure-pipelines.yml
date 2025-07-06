@@ -8,9 +8,6 @@ parameters:
 - name: modelName
   type: string
   default: 'phi-2'
-- name: downloadDir
-  type: string
-  default: '.\models\${{ parameters.modelName }}'
 - name: llamaCppDir
   type: string
   default: '.\llama.cpp'
@@ -36,7 +33,7 @@ jobs:
       pwsh ./convert_model.ps1 `
         -ModelId ${{ parameters.modelId }} `
         -ModelName ${{ parameters.modelName }} `
-        -DownloadDir "${{ parameters.downloadDir }}" `
+        -DownloadDir ".\models\${{ parameters.modelName }}" `
         -LlamaCppDir "${{ parameters.llamaCppDir }}" `
         -QuantizeType ${{ parameters.quantizeType }}
     displayName: 'Convert & Quantize Model'
