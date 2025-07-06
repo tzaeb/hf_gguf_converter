@@ -40,12 +40,8 @@ jobs:
       versionSpec: '3.x'
       addToPath: true
   - script: |
-      pwsh ./build_llama_cpp.ps1 `
-        -LlamaCppDir "${{ parameters.llamaCppDir }}"
+      powershell -File ./build_llama_cpp.ps1 -LlamaCppDir "${{ parameters.llamaCppDir }}"
     displayName: 'Build llama.cpp'
   - script: |
-      pwsh ./convert_model.ps1 `
-        -ModelId ${{ parameters.modelId }} `
-        -LlamaCppDir "${{ parameters.llamaCppDir }}" `
-        -QuantizeType ${{ parameters.quantizeType }}
+      powershell -File ./convert_model.ps1 -ModelId "${{ parameters.modelId }}" -LlamaCppDir "${{ parameters.llamaCppDir }}" -QuantizeType "${{ parameters.quantizeType }}"
     displayName: 'Convert & Quantize Model'
