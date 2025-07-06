@@ -1,14 +1,21 @@
 param(
     [Parameter(Mandatory=$true)][string]$ModelId,
-    [Parameter(Mandatory=$true)][string]$ModelName,
-    [string]$DownloadDir = ".\models\$ModelName",
+    [string]$DownloadDir,
     [string]$LlamaCppDir = ".\llama.cpp",
     [string]$QuantizeType = "Q4_K_M"
 )
 
+# Extract model name from ModelId (everything after the last '/')
+$ModelName = $ModelId.Split('/')[-1]
+
+# Set default download directory if not provided
+if (-not $DownloadDir) {
+    $DownloadDir = ".\models\$ModelName"
+}
+
 # derive outputs
 $OutputGgufF16       = "${ModelName}-f16.gguf"
-$OutputGgufQuantized = "$($ModelName)-$($QuantizeType.ToLower()).gguf"
+$OutputGgufQuantized = "$($ModelName)-$($QuantizeType).gguf"
 
 # --- Ensure llama.cpp exists ---
 if (-not (Test-Path -Path $LlamaCppDir -PathType Container)) {

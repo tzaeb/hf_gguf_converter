@@ -5,15 +5,29 @@ parameters:
 - name: modelId
   type: string
   default: 'microsoft/phi-2'
-- name: modelName
-  type: string
-  default: 'phi-2'
 - name: llamaCppDir
   type: string
   default: '.\llama.cpp'
 - name: quantizeType
   type: string
   default: 'Q4_K_M'
+  values:
+  - Q2_K
+  - Q3_K_S
+  - Q3_K_M
+  - Q3_K_L
+  - Q4_0
+  - Q4_1
+  - Q4_K_S
+  - Q4_K_M
+  - Q5_0
+  - Q5_1
+  - Q5_K_S
+  - Q5_K_M
+  - Q6_K
+  - Q8_0
+  - F16
+  - F32
 
 jobs:
 - job: ConvertModel
@@ -32,8 +46,6 @@ jobs:
   - script: |
       pwsh ./convert_model.ps1 `
         -ModelId ${{ parameters.modelId }} `
-        -ModelName ${{ parameters.modelName }} `
-        -DownloadDir ".\models\${{ parameters.modelName }}" `
         -LlamaCppDir "${{ parameters.llamaCppDir }}" `
         -QuantizeType ${{ parameters.quantizeType }}
     displayName: 'Convert & Quantize Model'
