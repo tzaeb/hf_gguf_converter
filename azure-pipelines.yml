@@ -40,7 +40,7 @@ jobs:
   - checkout: self
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.x'
+      versionSpec: '3.11'
       addToPath: true
   - script: |
       python -m pip install --upgrade pip
@@ -48,9 +48,12 @@ jobs:
       pip install torch --index-url https://download.pytorch.org/whl/cpu
       echo "Installing other dependencies..."
       pip install numpy "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+      echo "Attempting to install sentencepiece..."
+      pip install sentencepiece || echo "SentencePiece installation failed - some models may not convert"
       echo "Verifying installations..."
       python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
       python -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
+      python -c "try: import sentencepiece; print('SentencePiece: Available'); except ImportError: print('SentencePiece: Not available')"
     displayName: 'Install Python Dependencies'
   - ${{ if eq(parameters.buildLlamaCpp, true) }}:
     - script: |

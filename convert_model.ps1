@@ -45,9 +45,17 @@ Write-Host "Installing PyTorch (CPU version)..."
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 Write-Host "Installing other dependencies..."
 pip install numpy "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+Write-Host "Attempting to install sentencepiece..."
+# Try to install sentencepiece, but continue if it fails
+    pip install sentencepiece
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "SentencePiece installation failed. Some models may not convert properly."
+    Write-Warning "If conversion fails, you may need to install CMake and Visual Studio Build Tools."
+}
 Write-Host "Verifying installations..."
 python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
 python -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
+python -c "try: import sentencepiece; print('SentencePiece: Available'); except ImportError: print('SentencePiece: Not available')"
 
 # --- 3. Convert to GGUF (F16) ---
 Write-Host "Converting model to GGUF (F16)..."
