@@ -44,8 +44,13 @@ jobs:
       addToPath: true
   - script: |
       python -m pip install --upgrade pip
-      pip install --extra-index-url https://download.pytorch.org/whl/cpu torch~=2.2.1
-      pip install numpy~=1.26.4 "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+      echo "Installing PyTorch (CPU version)..."
+      pip install torch --index-url https://download.pytorch.org/whl/cpu
+      echo "Installing other dependencies..."
+      pip install numpy "transformers>=4.45.1,<5.0.0" "gguf>=0.1.0" "protobuf>=4.21.0,<5.0.0"
+      echo "Verifying installations..."
+      python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+      python -c "import transformers; print(f'Transformers version: {transformers.__version__}')"
     displayName: 'Install Python Dependencies'
   - ${{ if eq(parameters.buildLlamaCpp, true) }}:
     - script: |
